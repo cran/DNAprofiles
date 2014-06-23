@@ -16,7 +16,7 @@ ki.dist <- function(x,hyp.1,hyp.2="UN",hyp.true="UN",freqs.ki=get.freqs(x),freqs
   if (missing(x)){
     # unconditional (= for two profiles) ki dist at all loci in f.ki
     ret <- lapply(names(freqs.ki),function(L){    
-      y <- Zki.ibs.joint.dist.at.locus(hyp.1=hyp.1,hyp.2=hyp.2,hyp.true=hyp.true,f.ki=freqs.ki[[L]],f.true=freqs.true[[L]])
+      y <- Zki.ibs.joint.dist.at.locus(hyp.1=hyp.1,hyp.2=hyp.2,hyp.true=hyp.true,f.ki=freqs.ki[[L]],f.true=freqs.true[[L]],theta.ki = theta.ki,theta.true = theta.true)
       return(dist.unique.events(list(x=y$ki,fx= y$fx)))
     })
     names(ret) <- names(freqs.ki)
@@ -41,7 +41,7 @@ NULL
 #' @return A list of distributions, where a distribution is specified by a list with vectors \code{x}, \code{fx}.
 ibs.dist <- function(x,hyp.true="UN",freqs=get.freqs(x),theta=0){
   #  ibs dist at all loci
-  jd <- ki.ibs.joint.dist(x,hyp.1="UN",hyp.2="UN",hyp.true="UN",freqs.ki=freqs,theta.true=theta)
+  jd <- ki.ibs.joint.dist(x,hyp.1="UN",hyp.2="UN",hyp.true=hyp.true,freqs.ki=freqs,theta.true=theta)
   lapply(jd,function(y) dist.unique.events(list(x=y$ibs,fx=y$fx)) )
 }
 NULL
@@ -238,9 +238,9 @@ Zki.ibs.joint.dist.at.locus <- function(hyp.1,hyp.2="UN",hyp.true="UN",f.ki,f.tr
   
   # first determine all genotypes with fr.
   f.ki <- as.vector(f.ki)
-  A <- length(f.ki) # all allleles
-  G <- Zall.unordered.pairs.int(A) # all geno's
-  G.fr <- f.ki[G[,1]]*f.ki[G[,2]]*(2-(G[,1]==G[,2]))
+  G <- enum.profiles(list(locus=f.ki))
+  G.fr <- rmp(G,theta = theta.true)
+  
   # then determine ki dist for all genotypes
   X <- list()
   for(i in seq_along(G[,1])){
