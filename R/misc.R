@@ -10,7 +10,7 @@ ZfindInterval <- function(x, vec, rightmost.closed = FALSE, all.inside = FALSE)
 }
 
 Zcutright.str <- function(x,n){
-  #cuts off n characters from the right
+  #cuts off n+1 characters from the right
   substr(x,start=1,stop=(nchar(x)-n))
 }
 
@@ -43,7 +43,9 @@ Zassure.matrix <- function(x){
   # sometimes it is a single profile (vector) e.g. when x <- db[1,] without drop=FALSE
   # this functions takes x and makes it an n x (2*nloci) matrix (possibly n=1)
   if (!is.matrix(x)){
+    tmp <- attr(x,"freqs")
     x <- matrix(x,nrow=1,dimnames=list("",Zprofile.names(x)))
+    attr(x,"freqs") <- tmp
   }
   x
 }
@@ -108,3 +110,15 @@ Zfind.subsets.with.max.product <- function(x,max.product){
   }
   ret
 }
+NULL
+#' Normalizes allele frequencies such that their sum is 1
+#' 
+#' @param freqs list of per locus allele frequencies
+#' @return list
+#' @examples 
+#' 
+#' data(freqsNLsgmplus)
+#' fr0 <- normalize.freqs(freqsNLsgmplus)
+#' stopifnot(all(sapply(fr0,sum)==1))
+#' @export
+normalize.freqs <- function(freqs) lapply(freqs,function(x) x/sum(x))

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Maarten Kruijver (m.v.kruijver@vu.nl)" />
+
+<meta name="date" content="2015-04-19" />
+
+<title>Computing exceedance probabilities for likelihood ratios</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">Computing exceedance probabilities for likelihood ratios</h1>
+<h4 class="author"><em>Maarten Kruijver (<a href="mailto:m.v.kruijver@vu.nl">m.v.kruijver@vu.nl</a>)</em></h4>
+<h4 class="date"><em>2015-04-19</em></h4>
+</div>
+
+
+<p>What is the probability that the likelihood ratio exceeds a threshold <span class="math">\(t\)</span>, if a specified hypothesis is true? The problem of computing such a probability is encountered in several applications of forensic genetics. Applications include case pre-assessment for familial searching, power calculations for kinship problems and computing the power of discrimination of a DNA mixture. Recently, <span class="citation">(Kruijver 2015)</span> presented a novel algorithm for computing exceedance probabilities and demonstrated how importance sampling can be applied for efficient estimation. This note demonstrates how to apply the methods by several examples.</p>
+<div id="basic-example-throwing-dice" class="section level2">
+<h2>Basic example: throwing dice</h2>
+<p>First consider a basic example that does not relate to the forensic genetics context. If one throws a fair die ten times, then what is the probability that the product of the eyes exceeds 100? Let <span class="math">\(X_1,\ldots,X_{10}\)</span> be the independent random variables that denote the number of eyes, i.e. <span class="math">\[P(X_i=k)=1/6, \text{ for } k=1,\ldots,6,\]</span> and denote the product of the eyes by <span class="math">\(Y = \prod_{i=1}^{10} X_i\)</span>. Call <span class="math">\(q_t\)</span> the exceedance probability: <span class="math">\[q_t = P(Y&gt;t) = P(\prod_{i=1}^{10} X_i&gt;t).\]</span> Note that <span class="math">\(q_{100}\)</span> is the probability that the product of the eyes of the ten dice exceeds <span class="math">\(100\)</span>. The probability <span class="math">\(q_t\)</span> can be computed by brute-forcing over all values of the <span class="math">\(X_i\)</span>: <span class="math">\[
+\begin{aligned}
+q_t &amp;= \sum_{x_1,\ldots,x_{10}=1}^6 P(X_1=x_1)P(X_2=x_2) \cdots P(X_{10}=x_{10}) \mathbf{1}{ \{ x_1 x_2 \cdots x_{10} &gt;t  \} }\\
+&amp;= \sum_{x_1,\ldots,x_{10}=1}^6 (1/6)^{10} \ \mathbf{1}{ \{ x_1 x_2 \cdots x_{10} &gt;t  \} }
+\end{aligned}
+\]</span> Note that the brute-force approach evaluates a sum consisting of <span class="math">\(6^{10} \approx 60\text{ million}\)</span> terms. This approach is implemented in the <code>exact.q</code> function. We first load the <code>DNAprofiles</code> package and specify the distribution:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DNAprofiles)</code></pre>
+<pre><code>## Loading required package: RcppProgress</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">dist &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x=</span><span class="dv">1</span>:<span class="dv">6</span>,<span class="dt">fx=</span><span class="kw">rep</span>(<span class="dv">1</span>/<span class="dv">6</span>,<span class="dv">6</span>))
+dists &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span class="dt">n =</span> <span class="dv">10</span>,<span class="dt">expr =</span> dist,<span class="dt">simplify =</span> <span class="ot">FALSE</span>)</code></pre>
+<p>For this example, the <code>exact.q</code> function computes <span class="math">\(q_{100}\)</span> easily by brute-force:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exact.q</span>(<span class="dt">t =</span> <span class="dv">100</span>,<span class="dt">dists =</span> dists)</code></pre>
+<pre><code>## [1] 0.999063</code></pre>
+<p>Remark that the number of terms in the sum grows exponentially with the number of dice and so does the time needed to compute the sum. With the ten dice we consider in this example, <span class="math">\(q_{100}\)</span> is computed well within a second. Adding an extra five dice increases the computation time with a factor <span class="math">\(6^5 \approx 8 \text{ thousand}\)</span>. Adding another five to arrive at a total of ten, the computation time would increase with a factor <span class="math">\(6^{10} \approx 60\text{ million}\)</span> with respect to the base case. Large problems can not be handled conveniently with the brute force approach. A number of alternatives exist, including an exact algorithm implemented in <code>dist.product.pair</code> and a simulation approach implemented as <code>sim.q</code>.</p>
+</div>
+<div id="general-problem" class="section level2">
+<h2>General problem</h2>
+<p>In forensic genetics it is common to evaluate DNA evidence from STR markers using likelihood ratios. In several applications one is interested in the probability of obtaining a likelihood ratio larger than some threshold <span class="math">\(t\)</span> if some hypothesis is true. This probability might be, for example, the true or false positive rate of a database search. For a detailed introduction of this type of problems, the reader is reffered to <span class="citation">(Kruijver 2015)</span>.</p>
+<p>In general we are concerned with computing an exceedance probability <span class="math">\(q_t=P(Y&gt;t)\)</span>, where <span class="math">\(Y\)</span> is the product of <span class="math">\(m \geq 1\)</span> non-negative discrete random variables: <span class="math">\[q_t = \sum_{i_1,\ldots,i_m} P(X_1=x_{1,i_1})P(X_2=x_{2,i_2}) \cdots P(X_m=x_{m,i_m}) \mathbf{1}{ \{ x_{1,i_1}x_{2,i_2}\cdots x_{m,i_m} &gt;t  \} } ,\]</span> where the <span class="math">\(x_{j,k}\)</span> denote the outcomes of <span class="math">\(X_j\)</span>.</p>
+</div>
+<div id="familial-searching-case-pre-assessment" class="section level2">
+<h2>Familial searching: case pre-assessment</h2>
+<p>In familial searching <span class="citation">(Bieber, Brenner, and Lazer 2006)</span>, a DNA database is searched for potential relatives of the donor of a crime stain (see the vignette on familial searching for more information). A search may proceed by computing a likelihood ratio for some type of relatedness (e.g. full siblings, parent/offspring) between the donor of the crime stain and all profiles in the database. A candidate list of potential relatives is then composed of all database members with a large likelihood ratio (e.g. exceeding 500). The candidate list is expected to consist largely of false positives, which have to be eliminated by further (genetic) research, such as Y-STR typing. Before actually conducting a search, we are interested in predicting the number of false positives as well as the probability that a true relative will be selected on the candidate list (if present in the database).</p>
+<p>Suppose the crime scene profile is the following profile on the 15 markers of the NGM kit.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(freqsNLngm)
+x &lt;-<span class="st"> </span><span class="kw">profiles</span>(<span class="kw">list</span>(<span class="dt">D1S1656=</span><span class="st">&quot;12/15&quot;</span>,<span class="dt">D2S441=</span><span class="st">&quot;11/14&quot;</span>,<span class="dt">D2S1338=</span><span class="st">&quot;19/19&quot;</span>,<span class="dt">D3S1358=</span><span class="st">&quot;16/18&quot;</span>,<span class="dt">FGA=</span><span class="st">&quot;22/24&quot;</span>,<span class="dt">D8S1179=</span><span class="st">&quot;11/12&quot;</span>,
+              <span class="dt">D10S1248=</span><span class="st">&quot;13/14&quot;</span>,<span class="dt">TH01=</span><span class="st">&quot;7/9&quot;</span>,<span class="dt">VWA=</span><span class="st">&quot;16/17&quot;</span>,<span class="dt">D12S391=</span><span class="st">&quot;17/20&quot;</span>,<span class="dt">D16S539=</span><span class="st">&quot;12/13&quot;</span>,<span class="dt">D18S51=</span><span class="st">&quot;13/17&quot;</span>,
+              <span class="dt">D19S433=</span><span class="st">&quot;13/14&quot;</span>,<span class="dt">D21S11=</span><span class="st">&quot;27/31.2&quot;</span>,<span class="dt">D22S1045=</span><span class="st">&quot;15/16&quot;</span>),
+        <span class="dt">labels =</span> <span class="kw">get.labels</span>(<span class="dt">freqs =</span> freqsNLngm))</code></pre>
+<p>What will be the false positive rate of a search for full siblings of <span class="math">\(x\)</span>? We first obtain the distribution of the likelihood ratio per marker:</p>
+<pre class="sourceCode r"><code class="sourceCode r">un &lt;-<span class="st"> </span><span class="kw">ki.dist</span>(x,<span class="dt">hyp.1 =</span> <span class="st">&quot;FS&quot;</span>,<span class="dt">hyp.2 =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">hyp.true =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">freqs.ki =</span> freqsNLngm)</code></pre>
+<p>The distribution has three outcomes for the homozygous markers and six for the heterozygous markers <span class="citation">(Kruijver, Meester, and Slooten 2014)</span>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">un$D2S1338</code></pre>
+<pre><code>## $x
+## [1]  0.250000  2.395062 22.945283
+## 
+## $fx
+## [1] 0.78048962 0.20592723 0.01358315</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">un$D3S1358</code></pre>
+<pre><code>## $x
+## [1] 0.2500000 0.7671131 1.0593944 1.2842262 1.8687888 4.9248951
+## 
+## $fx
+## [1] 0.36461904 0.29192692 0.18650886 0.05843176 0.02385062 0.07466280</code></pre>
+<p>The false positive rate is equal to <span class="math">\(q_{t|H_d}\)</span>. Computing this probability using the brute-force approach would take a rather long time, since the sum involves <span class="math">\(6^{14}\times 3^1 \approx 235 \text{ billion}\)</span> terms. A more efficient solution is to use the exact algorithm described in <span class="citation">(Kruijver 2015)</span>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">un.cdf &lt;-<span class="st"> </span><span class="kw">dist.pair.cdf</span>(<span class="kw">dists.product.pair</span>(un))
+<span class="dv">1</span>-<span class="kw">un.cdf</span>(<span class="dv">500</span>)</code></pre>
+<pre><code>## [1] 0.0001675158</code></pre>
+<p>We find that <span class="math">\(q_{500|H_d} \approx 1.675 \times 10^{-4}\)</span>, so in a database of <span class="math">\(10^5\)</span> persons, one expects about 17 false positives, or about 168 in a database of one million persons. We compute the true positive rate, <span class="math">\(q_{500|H_p}\)</span>, as well:</p>
+<pre class="sourceCode r"><code class="sourceCode r">fs.cdf &lt;-<span class="st">  </span><span class="kw">ki.cdf</span>(x,<span class="dt">hyp.1 =</span> <span class="st">&quot;FS&quot;</span>,<span class="dt">hyp.2 =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">hyp.true =</span> <span class="st">&quot;FS&quot;</span>,<span class="dt">freqs.ki =</span> freqsNLngm) <span class="co"># shorthand</span>
+<span class="dv">1</span>-<span class="kw">fs.cdf</span>(<span class="dv">500</span>)</code></pre>
+<pre><code>## [1] 0.7106191</code></pre>
+<p>We find that <span class="math">\(q_{500|H_p} \approx 0.71\)</span>, so this strategy finds a true full sibling, if present, with probability approximately 0.71.</p>
+</div>
+<div id="parentage-testing-power-calculations" class="section level2">
+<h2>Parentage testing: power calculations</h2>
+<p>How well can we discriminate between parent/offpsring and unrelated persons using the 10 autosomal markers of the SGMplus kit? Suppose we compute a likelihood ratio for <span class="math">\[ H_p: \text{ parent/offspring},\]</span> versus <span class="math">\[ H_d: \text{ unrelated},\]</span> for a pair of profiles and report that we have found sufficient evidence if the LR exceeds <span class="math">\(10^4\)</span>. We obtain the per-marker distributions of the likelihood ratio:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(freqsNLsgmplus)
+hp &lt;-<span class="st"> </span><span class="kw">ki.dist</span>(<span class="dt">hyp.1 =</span> <span class="st">&quot;PO&quot;</span>,<span class="dt">hyp.2 =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">hyp.true =</span> <span class="st">&quot;PO&quot;</span>,<span class="dt">freqs.ki =</span> freqsNLsgmplus)
+hd &lt;-<span class="st"> </span><span class="kw">ki.dist</span>(<span class="dt">hyp.1 =</span> <span class="st">&quot;PO&quot;</span>,<span class="dt">hyp.2 =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">hyp.true =</span> <span class="st">&quot;UN&quot;</span>,<span class="dt">freqs.ki =</span> freqsNLsgmplus)</code></pre>
+<p>But the number of possible outcomes of the combined likelihood ratio is huge:</p>
+<pre class="sourceCode r"><code class="sourceCode r">n0 &lt;-<span class="st"> </span><span class="kw">sapply</span>(hp, function(d) <span class="kw">length</span>(d$x)) 
+n0</code></pre>
+<pre><code>## D2S1338 D3S1358     FGA D8S1179    TH01     VWA D16S539  D18S51 D19S433 
+##     148      75     185      88      52      86      52     150     148 
+##  D21S11 
+##     165</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prod</span>(n0)</code></pre>
+<pre><code>## [1] 1.539286e+20</code></pre>
+<p>Since the number of outcomes is over <span class="math">\(10^{20}\)</span>, we have no hope of computing <span class="math">\(q_{t|H}\)</span> using an exact aproach in a reasonable time. An alternative is to estimate the probabilities using simulation:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
+<pre><code>## [1] 0.339785</code></pre>
+<p>Simulation is problematic when the probability is small.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hd,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
+<pre><code>## [1] 1e-05</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e6</span>,<span class="dt">dists =</span> hd,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>Importance sampling works well in this case.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hd,<span class="dt">dists.sample =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
+<pre><code>## [1] 1.163392e-05</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e6</span>,<span class="dt">dists =</span> hd,<span class="dt">dists.sample =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
+<pre><code>## [1] 8.60397e-09</code></pre>
+<div class="references">
+<h2>References</h2>
+<p>Bieber, F.R., C.H. Brenner, and D. Lazer. 2006. “Finding Criminals Through DNA of Their Relatives.” <em>Science</em> 312 (5778): 1315. doi:<a href="http://dx.doi.org/10.1126/science.1122655">10.1126/science.1122655</a>.</p>
+<p>Kruijver, M. 2015. “Efficient Computations with the Likelihood Ratio Distribution.” <em>Forensic Science International: Genetics</em> 14. Elsevier: 116–24. doi:<a href="http://dx.doi.org/10.1016/j.fsigen.2014.09.018">10.1016/j.fsigen.2014.09.018</a>.</p>
+<p>Kruijver, M., R. Meester, and K. Slooten. 2014. “Optimal Strategies for Familial Searching.” <em>Forensic Science International: Genetics</em> 13 (0). Elsevier: 90–103. doi:<a href="http://dx.doi.org/10.1016/j.fsigen.2014.06.010">10.1016/j.fsigen.2014.06.010</a>.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

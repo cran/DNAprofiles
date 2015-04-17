@@ -24,7 +24,7 @@
 #'
 #'set.seed(100)
 #'
-#'# estiamte P(PI>1e6) for true PO
+#'# estimate P(PI>1e6) for true PO
 #'sim.q(t=1e6,dists=hp)
 #'
 #'# estimate P(PI>1e6) for unrelated pairs
@@ -35,6 +35,11 @@
 #'sim.q(t=1e6,dists=hd,dists.sample=hp)
 #'
 sim.q <- function(t,dists,N=1e5,dists.sample=dists){
+  if (any(sapply(dists,function(d0) anyDuplicated(d0$x)))) stop(
+    "dists contains duplicated events, apply dist.unique.events() first")
+  if (any(sapply(dists.sample,function(d0) anyDuplicated(d0$x)))) stop(
+    "dists.sample contains duplicated events, apply dist.unique.events() first")
+  
   if (identical(dists,dists.sample)){ # simple monte carlo
     samples <- lapply(dists,function(d0)
       sample(x=d0$x,size=N,replace=TRUE,prob=d0$fx)
@@ -51,11 +56,16 @@ sim.q <- function(t,dists,N=1e5,dists.sample=dists){
       ds <- dists.sample[[i]]
       d <- dists[[i]]
       ds.pos <- ds$fx>0
-      map <- match(ds$x[ds.pos],d$x)
+      map.ds.to.d <- match(ds$x[ds.pos],d$x,NA)
+      
+      # check if all outcomes of d are in ds
+      map.d.to.ds <- match(d$x[d$fx>0],ds$x,NA)
+#       if (any(is.na(map.d.to.ds))||any(ds$fx[map.d.to.ds]<=0)) warning("Not every outcome with positive probability under dists also has positive probability under dists.sample.")
       
       dists.sample[[i]] <- list(x=ds$x[ds.pos],fx=ds$fx[ds.pos])
-      dists[[i]] <- list(x=d$x[map],fx=d$fx[map])      
-      if (any(dists[[i]]$fx==0)) stop("For importance sampling, every outcome with positive probability under dists.sample should have positive probability under dists.")
+      dists[[i]] <- list(x=d$x[map.ds.to.d],fx=d$fx[map.ds.to.d])      
+      if (any(is.na(dists[[i]]$fx))) stop("For importance sampling, every outcome with positive probability under dists.sample should have positive probability under dists.")      
+      if (any(dists[[i]]$fx==0)) stop("For importance sampling, every outcome with positive probability under dists.sample should have positive probability under dists.")      
     }
     
     if (!identical(lapply(dists,function(y) y$x),

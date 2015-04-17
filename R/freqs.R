@@ -6,7 +6,7 @@
 #' @return list with named numeric vectors \code{x} and \code{fx}, denoting respectively the events and probabilities of the discrete distribution.
 #' @export
 #' @examples
-#'# The following example demonstrates the effect of having a small reference database on LRs
+#'# The following example demonstrates the effect on LRs of uncertainty from a small reference db
 #'# We sample a small reference db and compute LRs with estimated frequencies
 #'
 #'data(freqsNLsgmplus)
@@ -31,8 +31,9 @@
 #'
 #'plot(log10(rmp(x)),log10(rmp(x,freqs = fr.hat)))
 #'abline(a=0,b=1)
+#' @export
 recode.freqs <- function(freqs,along.with){
-  f1 <- freqs
+  f1 <- freqs[names(along.with)]
   f2 <- along.with
   
   f1.lev <- lapply(names(f1), function(L) names(f1[[L]]))
@@ -52,4 +53,11 @@ recode.freqs <- function(freqs,along.with){
     ret[[L]] <- f
   }
   ret  
+}
+NULL
+Zfreqs.to.mat <- function(freqs,markers=names(freqs)){
+  freqs.L <- sapply(freqs[markers],length)
+  ret <- matrix(0.,nrow = max(freqs.L),ncol = length(markers))
+  for(m in seq_along(markers)) ret[seq_len(freqs.L[m]),m] <- as.vector(freqs[[markers[m]]])
+  ret
 }
