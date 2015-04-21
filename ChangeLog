@@ -1,4 +1,9 @@
+2015-04-21 Maarten Kruijver <m.v.kruijver@vu.nl>
+  * Version 0.3.1 uploaded to CRAN
+  * small fix for a problem in the example of normalize.freqs
+
 2015-04-17 Maarten Kruijver <m.v.kruijver@vu.nl>
+  * Version 0.3 uploaded to CRAN
   * write.genepop exports profiles object to GenePop format
   * est.freqs estimates allele frequencies using the counting method
   * normalize.freqs ensures that allele frequencies sum to 1

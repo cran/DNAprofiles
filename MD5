@@ -1,5 +1,5 @@
-8eb96259fa5cba73372f214c72b123d2 *ChangeLog
-d99a99124d73afb92104499d06e14b78 *DESCRIPTION
+956783c2269261624f53345cd337d9fe *ChangeLog
+bf568929a3978e9c4057ad98b148a23c *DESCRIPTION
 053c4cf2e83b1a91bbd4167ed038ac34 *NAMESPACE
 8f7276fc0aba0c3ffa7ad8a3e2de4e93 *R/DNAprofiles-package.R
 f0b39a5667928450f05b6888ae3966be *R/RcppExports.R
@@ -19,7 +19,7 @@ a1ffd7003191976143c63267a985ec04 *R/ki_precomp.R
 2ed013c0994e951a5aacfcc32f5d91d8 *R/kicdf.R
 aa9599e3d29a8720372ad8d9dace40de *R/lrdist.R
 e2ef09f7333517c17776a52905863fe2 *R/lrdist_cdf.R
-705700d38d20d5a2b70bbcec9a53f0b6 *R/misc.R
+05980eec3aeacbc2319365d6f700d29f *R/misc.R
 dd609fbaf013d1cf6264eae153a139a7 *R/pr_next_allele.R
 bc048792d6119bf41407b8a4e64b8539 *R/profiles.R
 30d974f321a667eb5b6e1378bb91ef54 *R/profiles_extract.R
@@ -28,13 +28,13 @@ bc048792d6119bf41407b8a4e64b8539 *R/profiles.R
 0b88e2487cdb290d97ce0318446ae89b *R/simq.R
 db979eaca82e49ea07c4d4d6aa1ceadf *R/write.genepop.R
 dead9a2b08f648e92309af22dac5bbaf *README.md
-fdc43cd35782b7cd2fa29e49ffe934d1 *build/vignette.rds
+4fe1a8aa95a1b9f8325eca122e46f13f *build/vignette.rds
 2147fb78f77993cfb5bda01a3d9dcf85 *data/freqsNLngm.rda
 d67c1e93fe02790ce9e98b60bf4dca86 *data/freqsNLsgmplus.rda
 393d203665d108e37aeecef2e8d2579f *data/freqsUScaucs.rda
 06c2f92371a0a085b6b4f161d93305a2 *inst/doc/exceedance-probabilities.R
-18079f7b1241326dbf6ee126c7808adc *inst/doc/exceedance-probabilities.Rmd
-1fa7a07e6477d655ba5457dd40154f83 *inst/doc/exceedance-probabilities.html
+534e90d59dee85ae59371370d69af403 *inst/doc/exceedance-probabilities.Rmd
+10f309219afc0a9247d0fc714c4bf068 *inst/doc/exceedance-probabilities.html
 2b19bea6a83e041b7dc5d12f086ae978 *man/DNAprofiles-package.Rd
 ad77e1a5d53694fb2232fde5244fa047 *man/as.dbcompare.Rd
 4e1e79ffc879fce9e4b05c67fd7aaa99 *man/check.dist.Rd
@@ -66,7 +66,7 @@ fd274362e6a75d5c4722a347d5ece3c4 *man/ibs.pairs.Rd
 cc61e115840352c723cae29f4cb5de0e *man/ki.dist.Rd
 67c20f4ecbf925b43a9225fc21827685 *man/ki.ibs.joint.dist.Rd
 2112a9cb245eae382a615771da868d8f *man/ki.precompute.Rd
-326024146e0b3cd0cbf53198aaf80d94 *man/normalize.freqs.Rd
+a68152e128ea1d0f4e0f13017c635540 *man/normalize.freqs.Rd
 58d60e2b8826f331e996d2bb4685b1af *man/pr.next.allele.Rd
 b31f055458b068841ef7deb0f14847c8 *man/pr.next.alleles.Rd
 fc81f33b1b7e740dd3c154326f90e2c2 *man/print.profiles.Rd
@@ -115,5 +115,5 @@ e75e84eeb2618e654b82ffe37f528d37 *tests/testthat/test_precomputed_ki.R
 5b23e32a5dc4a3362e0d2a850aa2bf0a *tests/testthat/test_sample_profiles.R
 ff537d0da84b2bed41ce875b5efdcc3a *tests/testthat/test_sample_relatives.R
 d5ab34d1ffeba1a7904c445f431c0c83 *tests/testthat/test_vectorchecks.R
-18079f7b1241326dbf6ee126c7808adc *vignettes/exceedance-probabilities.Rmd
+534e90d59dee85ae59371370d69af403 *vignettes/exceedance-probabilities.Rmd
 8d82ee5bb5babbef7dd10cf0dec5b677 *vignettes/vignettes.bib

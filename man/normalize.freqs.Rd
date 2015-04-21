@@ -18,6 +18,6 @@ Normalizes allele frequencies such that their sum is 1
 \examples{
 data(freqsNLsgmplus)
 fr0 <- normalize.freqs(freqsNLsgmplus)
-stopifnot(all(sapply(fr0,sum)==1))
+stopifnot(all.equal(sapply(fr0,sum),setNames(rep(1,length(fr0)),names(fr0))))
 }
 

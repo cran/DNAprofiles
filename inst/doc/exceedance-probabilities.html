@@ -10,7 +10,7 @@
 
 <meta name="author" content="Maarten Kruijver (m.v.kruijver@vu.nl)" />
 
-<meta name="date" content="2015-04-19" />
+<meta name="date" content="2015-04-21" />
 
 <title>Computing exceedance probabilities for likelihood ratios</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Computing exceedance probabilities for likelihood ratios</h1>
 <h4 class="author"><em>Maarten Kruijver (<a href="mailto:m.v.kruijver@vu.nl">m.v.kruijver@vu.nl</a>)</em></h4>
-<h4 class="date"><em>2015-04-19</em></h4>
+<h4 class="date"><em>2015-04-21</em></h4>
 </div>
 
 
@@ -132,17 +132,17 @@ n0</code></pre>
 <pre><code>## [1] 1.539286e+20</code></pre>
 <p>Since the number of outcomes is over <span class="math">\(10^{20}\)</span>, we have no hope of computing <span class="math">\(q_{t|H}\)</span> using an exact aproach in a reasonable time. An alternative is to estimate the probabilities using simulation:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
-<pre><code>## [1] 0.339785</code></pre>
+<pre><code>## [1] 0.340743</code></pre>
 <p>Simulation is problematic when the probability is small.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hd,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
-<pre><code>## [1] 1e-05</code></pre>
+<pre><code>## [1] 2e-05</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e6</span>,<span class="dt">dists =</span> hd,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>Importance sampling works well in this case.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e4</span>,<span class="dt">dists =</span> hd,<span class="dt">dists.sample =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
-<pre><code>## [1] 1.163392e-05</code></pre>
+<pre><code>## [1] 1.164538e-05</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim.q</span>(<span class="dt">t =</span> <span class="fl">1e6</span>,<span class="dt">dists =</span> hd,<span class="dt">dists.sample =</span> hp,<span class="dt">N =</span> <span class="fl">1e6</span>)</code></pre>
-<pre><code>## [1] 8.60397e-09</code></pre>
+<pre><code>## [1] 8.714925e-09</code></pre>
 <div class="references">
 <h2>References</h2>
 <p>Bieber, F.R., C.H. Brenner, and D. Lazer. 2006. “Finding Criminals Through DNA of Their Relatives.” <em>Science</em> 312 (5778): 1315. doi:<a href="http://dx.doi.org/10.1126/science.1122655">10.1126/science.1122655</a>.</p>
